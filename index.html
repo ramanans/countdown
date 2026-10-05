@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Clock</title>
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --lcd-bg: #0a0f18;
+            --lcd-text: #00e5ff;
+            --lcd-glow: rgba(0, 229, 255, 0.5);
+            --label-text: #64748b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--label-text);
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* The main clock container */
+        .clock {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(145deg, #111, #000);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+            border: 1px solid #222;
+            max-width: 100%;
+        }
+
+        .unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* The digital numbers */
+        .digits {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--lcd-text);
+            background: var(--lcd-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            min-width: 100px;
+            text-align: center;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+            text-shadow: 0 0 10px var(--lcd-glow);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* The blinking colons */
+        .colon {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--lcd-text);
+            text-shadow: 0 0 10px var(--lcd-glow);
+            margin-bottom: 1.8rem; /* Pushes it up to align perfectly with the digits */
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        .label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--label-text);
+            margin-top: 0.75rem;
+        }
+
+        .summary {
+            margin-top: 2rem;
+            color: var(--label-text);
+            font-size: 0.9rem;
+        }
+
+        .summary strong {
+            color: var(--lcd-text);
+            text-shadow: 0 0 5px var(--lcd-glow);
+        }
+
+        .finished-msg {
+            font-size: 1.5rem;
+            color: var(--lcd-text);
+            text-shadow: 0 0 15px var(--lcd-glow);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 800px) {
+            .digits, .colon { font-size: 2.2rem; }
+            .digits { min-width: 65px; padding: 0.4rem 0.6rem; }
+            .colon { margin-bottom: 1.4rem; }
+            .label { font-size: 0.6rem; letter-spacing: 1px; }
+            .clock { padding: 1.5rem; gap: 0.3rem; }
+        }
+
+        @media (max-width: 500px) {
+            .digits, .colon { font-size: 1.6rem; }
+            .digits { min-width: 45px; padding: 0.3rem 0.4rem; }
+            .colon { margin-bottom: 1.2rem; }
+            h1 { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Countdown to September 24, 2031</h1>
+        <p class="subtitle">YRS : MO : WKS : DY : HR : MIN : SEC</p>
+    </header>
+
+    <div id="timer-container">
+        <div class="clock">
+            <div class="unit">
+                <div class="digits" id="years">00</div>
+                <div class="label">Years</div>
+            </div>
+            <div class="colon">:</div>
+            
+            <div class="unit">
+                <div class="digits" id="months">00</div>
+                <div class="label">Months</div>
+            </div>
+            <div class="colon">:</div>
+            
+            <div class="unit">
+                <div class="digits" id="weeks">00</div>
+                <div class="label">Weeks</div>
+            </div>
+            <div class="colon">:</div>
+            
+            <div class="unit">
+                <div class="digits" id="days">00</div>
+                <div class="label">Days</div>
+            </div>
+            <div class="colon">:</div>
+            
+            <div class="unit">
+                <div class="digits" id="hours">00</div>
+                <div class="label">Hours</div>
+            </div>
+            <div class="colon">:</div>
+            
+            <div class="unit">
+                <div class="digits" id="minutes">00</div>
+                <div class="label">Minutes</div>
+            </div>
+            <div class="colon">:</div>
+            
+            <div class="unit">
+                <div class="digits" id="seconds">00</div>
+                <div class="label">Seconds</div>
+            </div>
+        </div>
+
+        <div class="summary">
+            Total: <strong id="total-days">0</strong> days remaining
+        </div>
+    </div>
+
+    <script>
+        // Target: The very last second of September 24, 2031
+        const targetDate = new Date('2031-09-24T23:59:59');
+        
+        // DOM Elements
+        const els = {
+            years: document.getElementById('years'),
+            months: document.getElementById('months'),
+            weeks: document.getElementById('weeks'),
+            days: document.getElementById('days'),
+            hours: document.getElementById('hours'),
+            minutes: document.getElementById('minutes'),
+            seconds: document.getElementById('seconds'),
+            totalDays: document.getElementById('total-days')
+        };
+        const container = document.getElementById('timer-container');
+
+        function updateCountdown() {
+            const now = new Date();
+
+            if (now >= targetDate) {
+                clearInterval(countdownInterval);
+                container.innerHTML = '<p class="finished-msg">🎉 It\'s September 24, 2031! 🎉</p>';
+                return;
+            }
+
+            // 1. Calculate exact calendar differences
+            let years = targetDate.getFullYear() - now.getFullYear();
+            let months = targetDate.getMonth() - now.getMonth();
+            let days = targetDate.getDate() - now.getDate();
+            let hours = targetDate.getHours() - now.getHours();
+            let minutes = targetDate.getMinutes() - now.getMinutes();
+            let seconds = targetDate.getSeconds() - now.getSeconds();
+
+            // 2. Normalize negative rollovers (bottom-up)
+            if (seconds < 0) { seconds += 60; minutes--; }
+            if (minutes < 0) { minutes += 60; hours--; }
+            if (hours < 0) { hours += 24; days--; }
+            if (days < 0) {
+                let prevMonthDays = new Date(targetDate.getFullYear(), targetDate.getMonth(), 0).getDate();
+                days += prevMonthDays;
+                months--;
+            }
+            if (months < 0) { months += 12; years--; }
+
+            // 3. Break remaining days into Weeks and Days
+            let weeks = Math.floor(days / 7);
+            let remainingDays = days % 7;
+
+            // 4. Calculate total exact days for the summary footer
+            const msInDay = 1000 * 60 * 60 * 24;
+            const totalDaysRemaining = Math.floor((targetDate - now) / msInDay);
+
+            // 5. Update UI
+            els.years.textContent = String(years).padStart(2, '0');
+            els.months.textContent = String(months).padStart(2, '0');
+            els.weeks.textContent = String(weeks).padStart(2, '0');
+            els.days.textContent = String(remainingDays).padStart(2, '0');
+            
+            els.hours.textContent = String(hours).padStart(2, '0');
+            els.minutes.textContent = String(minutes).padStart(2, '0');
+            els.seconds.textContent = String(seconds).padStart(2, '0');
+            
+            els.totalDays.textContent = totalDaysRemaining.toLocaleString();
+        }
+
+        updateCountdown();
+        const countdownInterval = setInterval(updateCountdown, 1000);
+    </script>
+
+</body>
+</html>
